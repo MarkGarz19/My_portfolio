@@ -19,7 +19,7 @@
   --animate-fade-in-delay-4: fade-in 0.7s ease-out 0.8s forwards;
   --animate-meteor: meteor 5s linear infinite;
 
-  @keyframes float {
+  @keyframes float{
     0%,
     100%{
       transform: translateY(0);
@@ -140,19 +140,19 @@
 }
 
 @utility cosmic-button{
-  @apply px-6 py-2 rounded-r-full bg-primary text-primary-foreground font-medium
-  transition-all duration-300 hover:shadow-[0_0_10px_rgba(139,92,246,0.5)]
-  hover:scale-105 active:scale-95
+  @apply px-6 py-2 rounded-r-full bg-primary text-primary-foreground font-medium;
+  transition-all duration-300 hover:shadow-[0_0_10px_rgba(139,92,246,0.5)];
+  hover:scale-105 active:scale-95;
 }
 
 @utility star{
   @apply absolute rounded-full bg-white;
-  box-shadow: 0 0 10px 2px rgba(255,255,255,0.4)
+  box-shadow: 0 0 10px 2px rgba(255,255,255,0.4);
 }
 
 @utility meteor{
-  @apply absolute bg-linear-to-r from-white via-white to-transparent rounded-full 
-  box-shadow: 0 0 10px 5px rgba(255,255,255,0.3)
+  @apply absolute bg-gradient-to-r from-white via-white to-transparent rounded-full; 
+  box-shadow: 0 0 10px 5px rgba(255,255,255,0.3);
 }
 
 #root{
