@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/libs/utils";
 
-// Definimos los posibles estados del tema
 const THEMES = {
   LIGHT: 'light',
   DARK: 'dark',
@@ -14,19 +13,17 @@ export const ThemeToggle = () => {
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
 
-    // Limpiamos AMBAS clases al inicio para asegurar un estado limpio
     document.documentElement.classList.remove(THEMES.LIGHT, THEMES.DARK);
 
     if (Object.values(THEMES).includes(storedTheme)) {
       setTheme(storedTheme);
-      document.documentElement.classList.add(storedTheme); // Añade la clase del tema guardado
+      document.documentElement.classList.add(storedTheme); 
     } else {
-      // Si no hay tema o es inválido, establecemos 'light' como predeterminado
       localStorage.setItem("theme", THEMES.LIGHT);
       setTheme(THEMES.LIGHT);
-      document.documentElement.classList.add(THEMES.LIGHT); // Añade .light si no hay tema guardado
+      document.documentElement.classList.add(THEMES.LIGHT); 
     }
-  }, []); // Se ejecuta solo una vez al montar
+  }, []); 
 
   const toggleTheme = () => {
     let nextTheme;
@@ -35,10 +32,8 @@ export const ThemeToggle = () => {
     } else {
       nextTheme = THEMES.LIGHT;
     }
-
-    // Eliminamos la clase del tema actual
     document.documentElement.classList.remove(theme);
-    // Añadimos la clase del siguiente tema
+
     document.documentElement.classList.add(nextTheme);
     localStorage.setItem("theme", nextTheme);
     setTheme(nextTheme);
@@ -52,11 +47,8 @@ export const ThemeToggle = () => {
         "transition-all duration-500 ease-in-out",
         "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
 
-        // Estilos de fondo del switch según el tema (el "riel" o pista)
-        // Modo DÍA (LIGHT): Usamos colores más atractivos y vibrantes del tema
         theme === THEMES.LIGHT && "bg-gradient-to-r from-[hsl(var(--background))] to-[hsl(var(--border))] border border-[hsl(var(--border))]",
-        
-        // Modo NOCHE (DARK): Se mantiene como estaba, ya te gusta
+
         theme === THEMES.DARK && "bg-gray-800 border border-gray-700"
       )}
       aria-label="Toggle theme"
