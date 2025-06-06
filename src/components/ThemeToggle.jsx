@@ -46,9 +46,10 @@ export const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
+      // ELIMINADO: 'fixed', 'top-5', 'right-5', 'z-50'
+      // El botón ahora se posicionará dentro del flujo del navbar
       className={cn(
-        // ELIMINADO: 'max-sm:hidden' para que sea visible en móviles
-        "fixed top-5 right-5 z-50 p-[3px] rounded-full w-14 h-7 flex items-center",
+        "p-[3px] rounded-full w-14 h-7 flex items-center",
         "transition-all duration-500 ease-in-out",
         "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
 
