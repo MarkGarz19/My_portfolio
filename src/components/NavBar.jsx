@@ -3,8 +3,8 @@ import { cn } from "@/libs/utils";
 import { Menu, X, Moon, Sun } from "lucide-react";
 
 const THEMES = {
-  ROOT_DEFAULT: 'root', // Modo día por defecto
-  DARK: 'dark',        // Modo noche
+  ROOT_DEFAULT: 'root',
+  DARK: 'dark',
 };
 
 const navItems = [
@@ -158,7 +158,7 @@ export const NavBar = () => {
                 </div>
 
                 {/* Elementos para la versión MÓVIL (ThemeToggle + botón de menú) */}
-                <div className="md:hidden flex items-center space-x-4"> {/* Añadido space-x-4 para separar el toggle y el botón de menú */}
+                <div className="md:hidden flex items-center space-x-4">
                     {/* BOTÓN THEMETOGGLE PARA MÓVIL: visible en el navbar móvil */}
                     <button
                         onClick={toggleTheme}
@@ -175,7 +175,7 @@ export const NavBar = () => {
                         <Sun
                             className={cn(
                                 "h-4 w-4 transition-opacity duration-300 mx-1",
-                                theme === THEMES.DARK ? "opacity-0" : "opacity-100",
+                                theme === THEMES.ROOT_DEFAULT ? "opacity-0" : "opacity-100",
                                 theme === THEMES.ROOT_DEFAULT ? "text-yellow-500" : ""
                             )}
                         />
@@ -204,20 +204,56 @@ export const NavBar = () => {
 
                 {/* mobile nav overlay menu (este sí se oculta/muestra) */}
                 <div className={cn(
-                    "fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center",
+                    // CAMBIO CLAVE AQUÍ: Ajustar min-h-[100dvh] a h-[100dvh] o min-h-screen
+                    // y cambiar justify-center por justify-start con padding
+                    "fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col", // Quitar items-center justify-center
+                    "h-[100dvh] h-screen overflow-y-auto", // Usar h-[100dvh] y fallback h-screen, y overflow-y-auto
                     "transition-all duration-200 md:hidden",
-                    "max-h-dvh overflow-y-auto", // Se mantiene el scroll y la altura estable
                     isMenuOpen ? "opacity-100 pointer-events-auto"
                         : "opacity-0 pointer-events-none"
                 )}>
-                    <div className="flex flex-col space-y-9 text-xl py-20 w-full items-center"> {/* w-full y items-center para centrar el contenido */}
+                    <div className="flex flex-col space-y-9 text-xl py-20 w-full items-center"> {/* py-20 para padding superior/inferior si hay scroll */}
                         {navItems.map((item, key) => (
                             <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400"
                                 onClick={() => setIsMenuOpen(false)}>
                                 {item.name}
                             </a>
                         ))}
-                        {/* El BOTÓN THEMETOGGLE NO SE REPITE AQUÍ DENTRO DEL OVERLAY */}
+                        {/* BOTÓN THEMETOGGLE PARA MÓVIL DENTRO DEL OVERLAY */}
+                        <button
+                            onClick={toggleTheme}
+                            className={cn(
+                                "p-[3px] rounded-full w-14 h-7 inline-flex items-center justify-between mt-8",
+                                "relative",
+                                "transition-all duration-500 ease-in-out",
+                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                                theme === THEMES.ROOT_DEFAULT && "bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(280_80%_75%)] border border-[hsl(var(--primary))]",
+                                theme === THEMES.DARK && "bg-gray-800 border border-gray-700"
+                            )}
+                            aria-label="Toggle theme"
+                        >
+                            <Sun
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 mx-1",
+                                    theme === THEMES.ROOT_DEFAULT ? "opacity-0" : "opacity-100", // Fix here for Sun
+                                    theme === THEMES.ROOT_DEFAULT ? "text-yellow-500" : ""
+                                )}
+                            />
+                            <div
+                                className={cn(
+                                    "w-6 h-6 rounded-full shadow-md transition-all duration-500 ease-in-out absolute",
+                                    theme === THEMES.ROOT_DEFAULT && "translate-x-0 bg-[hsl(var(--primary))]",
+                                    theme === THEMES.DARK && "translate-x-[calc(100%+0.3rem)] bg-indigo-700"
+                                )}
+                            ></div>
+                            <Moon
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 ml-auto mr-1",
+                                    theme === THEMES.ROOT_DEFAULT ? "opacity-0" : "opacity-100", // Fix here for Moon
+                                    theme === THEMES.DARK ? "text-blue-200" : ""
+                                )}
+                            />
+                        </button>
                     </div>
                 </div>
 
