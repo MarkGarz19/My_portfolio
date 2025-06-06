@@ -25,13 +25,12 @@ export const HeroSection = () => {
             className="relative min-h-screen flex flex-col items-center justify-center px-4">
             <div className="container max-w-4xl mx-auto text-center z-10">
                 <div className="space-y-6">
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight px-4 sm:px-0"> {/* AÑADIDO: px-4 sm:px-0 */}
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
                         <span className="opacity-0 animate-fade-in">Hi, I'm </span>
                         <span className="text-primary opacity-0 animate-fade-in-delay-1">Markus </span>
                         <span className="text-gradient ml-2 opacity-0 animate-fade-in-delay-2">Garzon</span>
                     </h1>
-                    {/* Añadido max-w-md para el párrafo y quizás px-4 */}
-                    <p className="text-lg md:text-xl text-[hsl(var(--secondary-foreground))] max-w-md mx-auto opacity-0 animate-fade-in-delay-3 px-4 sm:px-0"> {/* CAMBIO: max-w-md y px-4 */}
+                    <p className="text-lg md:text-xl text-[hsl(var(--secondary-foreground))] max-w-2xl mx-auto opacity-0 animate-fade-in-delay-3">
                         I build web applications using modern technologies and clean code practices.
                         With a background in front-end development and a specialization in Big Data & AI,
                         I create efficient, scalable, and user-friendly solutions ready for real-world impact.

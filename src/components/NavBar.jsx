@@ -1,7 +1,12 @@
+import React, { useEffect, useState, useRef } from "react";
 import { cn } from "@/libs/utils";
-import { Menu,X } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
-import { ThemeToggle } from "../components/ThemeToggle"; 
+import { Menu, X, Moon, Sun } from "lucide-react"; // Importar iconos de ThemeToggle
+
+// NOTA: Si THEMES no está definido en este archivo o importado, agrégalo aquí
+const THEMES = {
+  ROOT_DEFAULT: 'root', // Modo día por defecto
+  DARK: 'dark',        // Modo noche
+};
 
 const navItems = [
     {name:"Home", href:"#hero"},
@@ -16,6 +21,44 @@ export const NavBar = () =>{
     const [isMenuOpen, setIsMenuOpen]= useState(false);
     const navRef = useRef(null);
 
+    // --- Lógica del ThemeToggle (ahora dentro de NavBar) ---
+    const [theme, setTheme] = useState(THEMES.ROOT_DEFAULT); // Estado del tema
+
+    useEffect(() => {
+        const storedTheme = localStorage.getItem("theme");
+        document.documentElement.classList.remove(THEMES.DARK); // Limpiar la clase dark al inicio
+
+        if (storedTheme === THEMES.DARK) {
+            setTheme(THEMES.DARK);
+            document.documentElement.classList.add(THEMES.DARK);
+        } else {
+            localStorage.setItem("theme", THEMES.ROOT_DEFAULT);
+            setTheme(THEMES.ROOT_DEFAULT);
+            document.documentElement.classList.remove(THEMES.DARK);
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        let nextTheme;
+        if (theme === THEMES.ROOT_DEFAULT) {
+            nextTheme = THEMES.DARK;
+        } else {
+            nextTheme = THEMES.ROOT_DEFAULT;
+        }
+
+        if (nextTheme === THEMES.DARK) {
+            document.documentElement.classList.add(THEMES.DARK);
+        } else {
+            document.documentElement.classList.remove(THEMES.DARK);
+        }
+
+        localStorage.setItem("theme", nextTheme);
+        setTheme(nextTheme);
+    };
+    // --- Fin de la lógica del ThemeToggle ---
+
+
+    // --- Lógica del Scroll y Anchor Links (como ya la tenías) ---
     useEffect( () => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10)
@@ -55,6 +98,8 @@ export const NavBar = () =>{
             });
         }
     },[])
+    // --- Fin de la lógica del Scroll y Anchor Links ---
+
 
     return(
         <nav
@@ -63,47 +108,125 @@ export const NavBar = () =>{
                 isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
             )}>
 
-        <div className="container flex items-center justify-between">
-            <a className="text-xl font-bold text-primary flex justify-between" href="#hero">
-                <span className="relative z-10">
-                    <span className="text-glow text-foreground">Markus</span> Portfolio
-                </span>
-            </a>
+            <div className="container flex items-center justify-between">
+                <a className="text-xl font-bold text-primary flex justify-between" href="#hero">
+                    <span className="relative z-10">
+                        <span className="text-glow text-foreground">Markus</span> Portfolio
+                    </span>
+                </a>
 
-            {/* desktop nav */}
-            <div className="hidden md:flex space-x-9 items-center"> {/* Añadido items-center para alinear ThemeToggle */}
-                {navItems.map((item,key)=>(
-                    <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400">
-                        {item.name}
-                    </a>
-                ))}
-                <ThemeToggle />
-            </div>
+                {/* Contenedor principal de los elementos de la derecha (Enlaces + ThemeToggle + Botón de menú móvil) */}
+                <div className="flex items-center space-x-4 md:space-x-9"> {/* space-x-4 para móvil, md:space-x-9 para escritorio */}
+                    {/* Elementos de navegación (visibles solo en escritorio) */}
+                    <div className="hidden md:flex space-x-9 items-center">
+                        {navItems.map((item,key)=>(
+                            <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400">
+                                {item.name}
+                            </a>
+                        ))}
+                        {/* BOTÓN THEMETOGGLE PARA ESCRITORIO */}
+                        <button
+                            onClick={toggleTheme}
+                            className={cn(
+                                "p-[3px] rounded-full w-14 h-7 inline-flex items-center justify-between",
+                                "transition-all duration-500 ease-in-out",
+                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                                theme === THEMES.ROOT_DEFAULT && "bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(280_80%_75%)] border border-[hsl(var(--primary))]",
+                                theme === THEMES.DARK && "bg-gray-800 border border-gray-700"
+                            )}
+                            aria-label="Toggle theme"
+                        >
+                            <Sun
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 mx-1",
+                                    theme === THEMES.DARK ? "opacity-0" : "opacity-100",
+                                    theme === THEMES.ROOT_DEFAULT ? "text-yellow-500" : ""
+                                )}
+                            />
+                            <div
+                                className={cn(
+                                    "w-6 h-6 rounded-full shadow-md transition-all duration-500 ease-in-out absolute",
+                                    theme === THEMES.ROOT_DEFAULT && "translate-x-0 bg-[hsl(var(--primary))]",
+                                    theme === THEMES.DARK && "translate-x-[calc(100%+0.3rem)] bg-indigo-700"
+                                )}
+                            ></div>
+                            <Moon
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 ml-auto mr-1",
+                                    theme === THEMES.ROOT_DEFAULT ? "opacity-0" : "opacity-100",
+                                    theme === THEMES.DARK ? "text-blue-200" : ""
+                                )}
+                            />
+                        </button>
+                    </div>
 
+                    {/* Elementos para la versión MÓVIL (botón de menú) */}
+                    <div className="md:hidden flex items-center">
+                        {/* BOTÓN THEMETOGGLE PARA MÓVIL (visible solo en el menú overlay) */}
+                        {/* Aquí va el botón si quieres que sea visible directamente en el navbar móvil */}
+                        {/* <button ... ThemeToggle code ... /> */} {/* Si no quieres que esté en el overlay */}
 
-            {/* mobile nav */}
-            <button onClick={()=>setIsMenuOpen((prev)=>!prev)} 
-            className="md:hidden p-2 text-foreground z-50"
-            aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}>
-                {isMenuOpen ? <X size={24} />: <Menu size={24} />}
-            </button>
-            <div className={cn("fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center",
-                "transition-all duration-200 md:hidden",
-                isMenuOpen ? "opacity-100 pointer-events-auto"
-                   : "opacity-0 pointer-events-none"
-            )}>
-                <div className="flex flex-col space-y-9 text-xl">
-                    {navItems.map((item,key)=>(
-                        <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400"
-                        onClick={()=> setIsMenuOpen(false)}>
-                            {item.name}
-                        </a>
-                    ))}
-                    <ThemeToggle />
+                        <button onClick={()=>setIsMenuOpen((prev)=>!prev)} 
+                        className="p-2 text-foreground z-50"
+                        aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}>
+                            {isMenuOpen ? <X size={24} />: <Menu size={24} />}
+                        </button>
+                    </div>
+                    
                 </div>
+
+                {/* mobile nav overlay menu (este sí se oculta/muestra) */}
+                <div className={cn("fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center",
+                    "transition-all duration-200 md:hidden",
+                    isMenuOpen ? "opacity-100 pointer-events-auto"
+                       : "opacity-0 pointer-events-none"
+                )}>
+                    <div className="flex flex-col space-y-9 text-xl">
+                        {navItems.map((item,key)=>(
+                            <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400"
+                            onClick={()=> setIsMenuOpen(false)}>
+                                {item.name}
+                            </a>
+                        ))}
+                        {/* BOTÓN THEMETOGGLE PARA MÓVIL DENTRO DEL OVERLAY */}
+                        <button
+                            onClick={toggleTheme}
+                            className={cn(
+                                "p-[3px] rounded-full w-14 h-7 inline-flex items-center justify-between mt-8", // mt-8 para separar de los enlaces
+                                "relative",
+                                "transition-all duration-500 ease-in-out",
+                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                                theme === THEMES.ROOT_DEFAULT && "bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(280_80%_75%)] border border-[hsl(var(--primary))]",
+                                theme === THEMES.DARK && "bg-gray-800 border border-gray-700"
+                            )}
+                            aria-label="Toggle theme"
+                        >
+                            <Sun
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 mx-1",
+                                    theme === THEMES.DARK ? "opacity-0" : "opacity-100",
+                                    theme === THEMES.ROOT_DEFAULT ? "text-yellow-500" : ""
+                                )}
+                            />
+                            <div
+                                className={cn(
+                                    "w-6 h-6 rounded-full shadow-md transition-all duration-500 ease-in-out absolute",
+                                    theme === THEMES.ROOT_DEFAULT && "translate-x-0 bg-[hsl(var(--primary))]",
+                                    theme === THEMES.DARK && "translate-x-[calc(100%+0.3rem)] bg-indigo-700"
+                                )}
+                            ></div>
+                            <Moon
+                                className={cn(
+                                    "h-4 w-4 transition-opacity duration-300 ml-auto mr-1",
+                                    theme === THEMES.ROOT_DEFAULT ? "opacity-0" : "opacity-100",
+                                    theme === THEMES.DARK ? "text-blue-200" : ""
+                                )}
+                            />
+                        </button>
+                    </div>
+                </div>
+                
             </div>
-            
-        </div>
 
         </nav>
     )
