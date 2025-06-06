@@ -169,13 +169,13 @@ export const NavBar = () => {
                 {/* mobile nav overlay menu (este sí se oculta/muestra) */}
                 <div className={cn(
                     "fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center",
-                    // AÑADIDO: max-h-dvh y overflow-y-auto para el scroll en móvil
-                    "max-h-dvh overflow-y-auto",
                     "transition-all duration-200 md:hidden",
+                    // REMOVIDO: max-h-dvh y overflow-y-auto aquí
                     isMenuOpen ? "opacity-100 pointer-events-auto"
                         : "opacity-0 pointer-events-none"
                 )}>
-                    <div className="flex flex-col space-y-9 text-xl py-20">
+                    {/* Contenedor de enlaces y ThemeToggle con scroll propio */}
+                    <div className="flex flex-col space-y-9 text-xl py-20 w-full max-h-[80vh] overflow-y-auto items-center"> {/* AÑADIDO: max-h-[80vh] y overflow-y-auto, y w-full */}
                         {navItems.map((item, key) => (
                             <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400"
                                 onClick={() => setIsMenuOpen(false)}>
@@ -186,7 +186,7 @@ export const NavBar = () => {
                         <button
                             onClick={toggleTheme}
                             className={cn(
-                                "p-[3px] rounded-full w-14 h-7 inline-flex items-center justify-between mt-8", // mt-8 para separar de los enlaces
+                                "p-[3px] rounded-full w-14 h-7 inline-flex items-center justify-between mt-8",
                                 "relative",
                                 "transition-all duration-500 ease-in-out",
                                 "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
