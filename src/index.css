@@ -19,7 +19,7 @@
   --animate-fade-in-delay-3: fade-in 0.7s ease-out 0.6s forwards;
   --animate-fade-in-delay-4: fade-in 0.7s ease-out 0.8s forwards;
   --animate-meteor: meteor 5s linear infinite;
-  --animate-scroll-x: scroll-x 30s linear infinite; /* Velocidad del carrusel, puedes ajustarla */
+  --animate-scroll-x: scroll-x 30s linear infinite;
 
   @keyframes float {
     0%,
@@ -77,7 +77,7 @@
 }
 
 @layer base {
-  :root { /* MODO DÍA */
+  :root {
     --background: 240 100% 99%;
     --foreground: 220 15% 20%;
     --secondary-foreground: 220 5% 50%;
@@ -90,7 +90,7 @@
     --gradient-end: 280 90% 80%;
   }
 
-  .dark { /* MODO NOCHE */
+  .dark {
     --background: 222 47% 5%;
     --foreground: 213 30% 91%;
     --secondary-foreground: 213 30% 70%;
@@ -99,8 +99,6 @@
     --primary-foreground: 213 31% 91%;
     --border: 217 33% 20%;
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-    --gradient-start: 250 66% 60%;
-    --gradient-end: 300 70% 80%;
   }
 
   * {
@@ -109,18 +107,15 @@
 
   html {
     @apply scroll-smooth;
-    /* Aseguramos que el HTML no tenga un fondo para que el body lo controle */
     background: none !important; 
   }
 
   body {
-    /* El body aplica el background y el color de texto base del tema */
     @apply bg-background text-foreground transition-colors duration-300;
     font-feature-settings: "rlig" 1, "calt" 1;
     transition: background-color 0.3s ease-in-out, background 0.3s ease-in-out, color 0.3s ease-in-out;
   }
 
-  /* Aplica el gradiente al body cuando NO tiene la clase .dark (modo día) */
   html:not(.dark) body {
     background: linear-gradient(to bottom right,
       hsl(var(--background)),
@@ -128,25 +123,20 @@
     ) !important;
   }
 
-  /* Aplica el color de fondo sólido al body cuando tiene la clase .dark */
   .dark body {
     background-color: hsl(var(--background)) !important;
   }
 
-  /* REGLAS CLAVE PARA QUE CADA SECCIÓN RESPETE SU ESPACIO */
-  /* Añado !important al scroll-margin-top para forzarlo si hay conflicto */
   section[id] {
-    scroll-margin-top: 8rem !important; /* AÑADIDO !important AQUI */
-    min-height: calc(100vh - 8rem) !important; /* AÑADIDO !important AQUI */
+    scroll-margin-top: 8rem !important;
+    min-height: calc(100vh - 8rem) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* @apply bg-background;  <-- Descomentar si tus secciones no tienen un bg- en su JSX */
   }
 
-  /* Controla la visibilidad de estrellas y meteoros */
-  html:not(.dark) .star,
-  html:not(.dark) .meteor {
+  .light .star,
+  .light .meteor {
     opacity: 0 !important;
     visibility: hidden !important;
     transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
@@ -198,10 +188,25 @@
   border: 1px solid hsl(var(--border));
 }
 
-@utility cosmic-button {
-  @apply px-6 py-2 rounded-full bg-primary text-primary-foreground font-medium;
-  transition-all duration-300 hover:shadow-[0_0_10px_rgba(139,92,246,0.5)];
-  hover:scale-105 active:scale-95;
+.cosmic-button {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  border-radius: 9999px !important;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.cosmic-button:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5) !important;
+}
+
+.cosmic-button:active {
+  transform: scale(0.95) !important;
 }
 
 @utility star {
