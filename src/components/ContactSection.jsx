@@ -2,8 +2,10 @@ import { Linkedin, Mail, MapPin, Phone, Send } from "lucide-react";
 import { cn } from "@/libs/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 export const ContactSection = () => {
+    const { t } = useLanguage(); 
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -39,15 +41,15 @@ export const ContactSection = () => {
         .then(data => {
             if (data.ok) {
                 toast({
-                    title: "¡Mensaje enviado!",
-                    description: "Gracias por tu mensaje. Me pondré en contacto contigo pronto.",
+                    title: t("toast_success_title"),
+                    description: t("toast_success_description"),
                 });
                 setFormData({ name: '', email: '', message: '' });
             } else {
                 console.error("Error al enviar el formulario (Formspree):", data);
                 toast({
-                    title: "Error al enviar",
-                    description: data.errors ? data.errors.map(err => err.message).join(', ') : "Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.",
+                    title: t("toast_error_send_title"),
+                    description: data.errors ? data.errors.map(err => err.message).join(', ') : t("toast_error_send_description_default"),
                     variant: "destructive",
                 });
             }
@@ -55,8 +57,8 @@ export const ContactSection = () => {
         .catch(error => {
             console.error("Error de red o del servidor:", error);
             toast({
-                title: "Error de conexión",
-                description: "No se pudo conectar con el servidor. Revisa tu conexión.",
+                title: t("toast_error_connection_title"),
+                description: t("toast_error_connection_description"),
                 variant: "destructive",
             });
         })
@@ -69,16 +71,15 @@ export const ContactSection = () => {
         <section id="Contact" className="py-24 px-4 relative bg-secondary/70">
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center text-foreground">
-                    Get In <span className="text-primary">Touch</span>
+                    {t('contact_get_in')}<span className="text-primary">{t('contact_touch_emphasis')}</span>
                 </h2>
                 <p className="text-center text-[hsl(var(--secondary-foreground))] mb-12 max-w-2xl mx-auto">
-                    Is there any project you're thinking about or would you like us to collaborate on?
-                    Contact me without obligation. I love exploring new possibilities.
+                    {t('contact_intro_paragraph')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div className="space-y-8">
                         <h3 className="text-2xl font-semibold mb-6 text-foreground">
-                            Contact Information
+                            {t('contact_info_title')}
                         </h3>
                         <div className="space-y-6">
                             <div className="flex items-start space-x-4">
@@ -86,7 +87,7 @@ export const ContactSection = () => {
                                     <Mail className="h-6 w-6 text-primary" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-medium text-foreground">Email</h4>
+                                    <h4 className="font-medium text-foreground">{t('email_title')}</h4>
                                     <a href="mailto:markusbohorquez23@gmail.com"
                                         className="text-[hsl(var(--secondary-foreground))] hover:text-primary transition-colors">
                                         markusbohorquez23@gmail.com
@@ -98,7 +99,7 @@ export const ContactSection = () => {
                                     <Phone className="h-6 w-6 text-primary" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-medium text-foreground">Phone</h4>
+                                    <h4 className="font-medium text-foreground">{t('phone_title')}</h4>
                                     <a href="tel:+34641162729"
                                         className="text-[hsl(var(--secondary-foreground))] hover:text-primary transition-colors">
                                         +34 641162729
@@ -110,15 +111,15 @@ export const ContactSection = () => {
                                     <MapPin className="h-6 w-6 text-primary" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-medium text-foreground">Location</h4>
+                                    <h4 className="font-medium text-foreground">{t('location_title')}</h4>
                                     <p className="text-[hsl(var(--secondary-foreground))]">
-                                        Madrid, España
+                                        {t('location_city')}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div className="pt-8">
-                            <h4 className="font-medium mb-4 text-foreground text-center">Connect With Me</h4>
+                            <h4 className="font-medium mb-4 text-foreground text-center">{t('connect_with_me_title')}</h4>
                             <div className="flex space-x-4 justify-center">
                                 <a href="https://www.linkedin.com/in/markusgarzon/"
                                     target="_blank"
@@ -130,7 +131,7 @@ export const ContactSection = () => {
                         </div>
                     </div>
                     <div className="bg-card p-8 rounded-lg shadow-[var(--color-card-shadow)]">
-                        <h3 className="text-2xl font-semibold mb-6 text-foreground"> Send a Message </h3>
+                        <h3 className="text-2xl font-semibold mb-6 text-foreground"> {t('send_message_title')} </h3>
                         <form
                             className="space-y-6"
                             onSubmit={handleSubmit}
@@ -141,7 +142,7 @@ export const ContactSection = () => {
                             
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium mb-2 text-foreground">
-                                    Your Name
+                                    {t('your_name_label')}
                                 </label>
                                 <input
                                     type="text"
@@ -151,12 +152,12 @@ export const ContactSection = () => {
                                     value={formData.name}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Enter your name"
+                                    placeholder={t('your_name_placeholder')}
                                 />
                             </div>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium mb-2 text-foreground">
-                                    Your Email
+                                    {t('your_email_label')}
                                 </label>
                                 <input
                                     type="email"
@@ -166,12 +167,12 @@ export const ContactSection = () => {
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Enter your Email"
+                                    placeholder={t('your_email_placeholder')}
                                 />
                             </div>
                             <div>
                                 <label htmlFor="message" className="block text-sm font-medium mb-2 text-foreground">
-                                    Your Message
+                                    {t('your_message_label')}
                                 </label>
                                 <textarea
                                     id="message"
@@ -180,7 +181,7 @@ export const ContactSection = () => {
                                     value={formData.message}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Enter your Message..."
+                                    placeholder={t('your_message_placeholder')}
                                 />
                             </div>
                             <button
@@ -190,7 +191,7 @@ export const ContactSection = () => {
                                     isSubmitting && "opacity-70 cursor-not-allowed"
                                 )}
                             >
-                                {isSubmitting ? "Sending..." : "Send Message"}
+                                {isSubmitting ? t("sending_button") : t("send_message_button")}
                                 <Send size={16} />
                             </button>
                         </form>

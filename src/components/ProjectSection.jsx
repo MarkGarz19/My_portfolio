@@ -1,11 +1,12 @@
 import { Github } from "lucide-react"
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext.jsx';
 
-const projects = [
+const projectsConfig = [
     {
         id:1,
         title:"App_Temperatura_Pais",
-        description:"This project obtains and displays information on the current temperatures of the countries of Europe, as well as the borders between the countries, using a MySQL Workbench database and external APIs (JSON and XML) to obtain climate data.",
+        descriptionKey:"project_1_description",
         image:"/projects/project2.png",
         tags:["Python","Html","Mysql","Tailwind"],
         demoUrl:"#",
@@ -14,7 +15,7 @@ const projects = [
     {
         id:2,
         title:"Traductor_Azure",
-        description:"This project uses Flask as a web framework and takes advantage of the services of Azure Cognitive Services to offer advanced text translation, voice recognition (Speech-to-Text) and voice synthesis (Text-to-Speech) functionalities.",
+        descriptionKey:"project_2_description",
         image:"/projects/project1.png",
         tags:["Python","Html","Tailwind","Api"],
         demoUrl:"#",
@@ -23,7 +24,7 @@ const projects = [
     {
         id:3,
         title:"Elegance-Mode",
-        description:"This project is a full-stack e-commerce application. The backend, developed with Node.js and Express.js, functions as a RESTful API managing business logic, user data, products, and shopping carts following an MVC pattern.",
+        descriptionKey:"project_3_description",
         image:"/projects/project3.png",
         tags:["Html","Css","JavaScript","Node","Express"],
         demoUrl:"#",
@@ -32,20 +33,21 @@ const projects = [
             backend: "https://github.com/MarkGarz19/Backend_Elegance_Mode"
         },
     },
-]
+];
 
 export const ProjectSection = () =>{
+    const { t } = useLanguage();
     return (
         <section id="projects" className="py-24 px-4 relative">
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center text-foreground">
-                    Featured <span className="text-primary">Projects</span>
+                    {t('projects_title')} <span className="text-primary">{t('projects_title_emphasis')}</span>
                 </h2>
                 <p className="text-center text-[hsl(var(--secondary-foreground))] mb-12 max-w-2xl mx-auto">
-                    Here are some of my recent projects. Each project was carefully crafted with attention to detail, performance, and user experience
+                    {t('projects_intro_paragraph')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project, key) => (
+                    {projectsConfig.map((project, key) => (
                         <div key={key} className="group bg-card rounded-lg overflow-hidden card-hover shadow-[var(--color-card-shadow)]">
                             <div className="h-48 overflow-hidden">
                                 <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
@@ -62,9 +64,8 @@ export const ProjectSection = () =>{
                                 <h3 className="text-xl font-semibold mb-1 text-foreground">
                                     {project.title}
                                 </h3>
-                                {/* La descripción se mantiene sin cambios en su contenido */}
                                 <p className="text-[hsl(var(--secondary-foreground))] text-sm mb-4">
-                                    {project.description}
+                                    {t(project.descriptionKey)}
                                 </p>
                                 <div className="flex items-center">
                                     <div className="flex space-x-3.5">
@@ -76,7 +77,7 @@ export const ProjectSection = () =>{
                                                         rel="noopener noreferrer"
                                                         className="text-foreground/80 hover:text-primary transition-colors duration-300 flex items-center space-x-1">
                                                         <Github size={20}/>
-                                                        <span className="text-xs">Frontend</span>
+                                                        <span className="text-xs">{t('frontend_link')}</span>
                                                     </a>
                                                 )}
                                                 {project.githubUrl.backend && (
@@ -85,7 +86,7 @@ export const ProjectSection = () =>{
                                                         rel="noopener noreferrer"
                                                         className="text-foreground/80 hover:text-primary transition-colors duration-300 flex items-center space-x-1">
                                                         <Github size={20}/>
-                                                        <span className="text-xs">Backend</span>
+                                                        <span className="text-xs">{t('backend_link')}</span>
                                                     </a>
                                                 )}
                                             </>
@@ -107,7 +108,7 @@ export const ProjectSection = () =>{
                 </div>
                 <div className="text-center mt-12">
                     <a className="cosmic-button w-fit flex items-center mx-auto gap-2" target="_blank" href="https://github.com/MarkGarz19">
-                        Check My Github <ArrowRight size={17} />
+                        {t('check_my_github_button')} <ArrowRight size={17} />
                     </a>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+import { useLanguage } from '../context/LanguageContext.jsx';
+
 const skills = [
     { name: "HTML", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", category: "frontend" },
     { name: "CSS", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg", category: "frontend" },
@@ -19,13 +21,14 @@ const skills = [
 ];
 
 export const SkillsSection = () => {
+    const { t } = useLanguage();
     const skillsToDisplay = [...skills, ...skills];
 
     return (
         <section id="skill" className="py-24 px-4 relative bg-secondary/20">
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-foreground">
-                    My <span className="text-primary">Skills</span>
+                    {t('skills_title')} <span className="text-primary">{t('skills_title_emphasis')}</span>
                 </h2>
 
                 <div className="flex justify-center">

@@ -1,6 +1,8 @@
 import { ArrowUp } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 export const Footer = () => {
+    const {  t } = useLanguage();
     const currentYear = new Date().getFullYear();
 
     return (

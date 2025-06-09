@@ -1,25 +1,8 @@
 import { Brain, Code, User } from "lucide-react";
+import { useLanguage } from '../context/LanguageContext.jsx';
 
 export const AboutSection = () => {
-    const handleAnchorClick = (event) => {
-        event.preventDefault();
-
-        const targetId = event.currentTarget.hash;
-        const targetElement = document.querySelector(targetId);
-
-        const navbar = document.querySelector('nav');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0;
-
-        if (targetElement) {
-            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        }
-    };
-
+    const { t } = useLanguage();
     return (
         <section
             id="about"
@@ -27,22 +10,21 @@ export const AboutSection = () => {
         >
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-2xl md:text-4xl font-bold mb-8 text-center sm:text-3xl md:mb-12">
-                    About <span className="text-primary"> Me</span>
+                    {t('about_title')} <span className="text-primary">{t('about_title_emphasis')}</span>
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start sm:gap-12">
                     <div className="space-y-4 sm:space-y-6">
                         <h3 className="text-xl font-semibold sm:text-2xl">
-                            Passionate Web Developer
+                            {t('passionate_developer_title')}
                         </h3>
                         <p className="text-sm text-[hsl(var(--secondary-foreground))] sm:text-base">
-                            I am a passionate web developer with the ability to build responsive
-                            and accessible applications. My specialization in Big Data and AI allows
-                            me to integrate intelligent and efficient solutions.
+                            {t('about_description')}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-2 pt-2 justify-center">
-                            <a href="#Contact" className="cosmic-button text-sm sm:text-base" onClick={handleAnchorClick}>Get In Touch</a>
+                            {/* Eliminado onClick={handleAnchorClick} */}
+                            <a href="#Contact" className="cosmic-button text-sm sm:text-base">{t('get_in_touch_button')}</a>
                             <a href="/CV_MarkusGarzon.pdf" download="CV_MarkusGarzon.pdf" className="px-5 py-1.5 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300 text-sm sm:px-6 sm:py-2 sm:text-base">
-                                Download CV
+                                {t('download_cv_button')}
                             </a>
                         </div>
                     </div>
@@ -53,9 +35,9 @@ export const AboutSection = () => {
                                     <Code className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">Web Application Development</h4>
+                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">{t('web_dev_title')}</h4>
                                     <p className="text-xs text-[hsl(var(--secondary-foreground))] sm:text-sm">
-                                        With a solid base in web development, I focus on the building of interactive and responsive applications, applying best practices and modern technologies.
+                                        {t('web_dev_description')}
                                     </p>
                                 </div>
                             </div>
@@ -66,9 +48,9 @@ export const AboutSection = () => {
                                     <User className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">Big Data Analysis and Management</h4>
+                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">{t('big_data_title')}</h4>
                                     <p className="text-xs text-[hsl(var(--secondary-foreground))] sm:text-sm">
-                                        Trained in the collection, processing, and analysis of large volumes of data. Interested in transforming complex data into key insights for decision-making.
+                                        {t('big_data_description')}
                                     </p>
                                 </div>
                             </div>
@@ -79,9 +61,9 @@ export const AboutSection = () => {
                                     <Brain className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">AI Solutions Implementation</h4>
+                                    <h4 className="font-semibold text-base sm:text-lg text-foreground">{t('ai_solutions_title')}</h4>
                                     <p className="text-xs text-[hsl(var(--secondary-foreground))] sm:text-sm">
-                                        Passionate about Artificial Intelligence, with knowledge in Machine Learning to develop predictive models and innovative applications that solve problems.
+                                        {t('ai_solutions_description')}
                                     </p>
                                 </div>
                             </div>

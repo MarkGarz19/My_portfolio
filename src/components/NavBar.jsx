@@ -2,30 +2,36 @@ import React, { useEffect, useState, useRef } from "react";
 import { cn } from "@/libs/utils";
 import { Menu, X, Moon, Sun } from "lucide-react";
 
+import { useLanguage } from '../context/LanguageContext.jsx';
+
+
 const THEMES = {
-  ROOT_DEFAULT: 'root', // Modo día por defecto
-  DARK: 'dark',        // Modo noche
+    ROOT_DEFAULT: 'root',
+    DARK: 'dark',
 };
 
-const navItems = [
-    {name:"Home", href:"#hero"},
-    {name:"About", href:"#about"},
-    {name:"Skill", href:"#skill"},
-    {name:"Projects", href:"#projects"},
-    {name:"Contact", href:"#Contact"},
+const navItemKeys = [
+    { key: "home", href: "#hero" },
+    { key: "about", href: "#about" },
+    { key: "skill", href: "#skill" },
+    { key: "projects", href: "#projects" },
+    { key: "contact", href: "#Contact" },
 ];
 
 export const NavBar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // --- ESTADO Y REF PARA EL COMPORTAMIENTO DEL NAV BAR ---
+    const [isScrolled, setIsScrolled] = useState(false); // Estado para el encogimiento del NavBar
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú móvil
     const navRef = useRef(null);
 
-    // Lógica del ThemeToggle (ahora dentro de NavBar)
-    const [theme, setTheme] = useState(THEMES.ROOT_DEFAULT); // Estado del tema
+    // --- LÓGICA DE TRADUCCIÓN DEL CONTEXTO ---
+    const { currentLang, toggleLanguage, t } = useLanguage();
 
+    // Lógica del Tema 
+    const [theme, setTheme] = useState(THEMES.ROOT_DEFAULT);
     useEffect(() => {
         const storedTheme = localStorage.getItem("theme");
-        document.documentElement.classList.remove(THEMES.DARK); // Limpiar la clase dark al inicio
+        document.documentElement.classList.remove(THEMES.DARK);
 
         if (storedTheme === THEMES.DARK) {
             setTheme(THEMES.DARK);
@@ -54,51 +60,21 @@ export const NavBar = () => {
         localStorage.setItem("theme", nextTheme);
         setTheme(nextTheme);
     };
-    // Fin de la lógica del ThemeToggle
 
-
-    // Lógica del Scroll y Anchor Links (como ya la tenías)
+    // --- EFECTO PARA EL COMPORTAMIENTO 'isScrolled' DEL NAV BAR ---
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
         };
+
         window.addEventListener("scroll", handleScroll);
-
-        const links = navRef.current.querySelectorAll('a[href^="#"]');
-
-        const handleAnchorClick = (event) => {
-            const targetId = event.currentTarget.hash;
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                event.preventDefault();
-
-                const navbarHeight = navRef.current ? navRef.current.offsetHeight : 0;
-                
-                const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-
-                setIsMenuOpen(false);
-            }
-        };
-
-        links.forEach(link => {
-            link.addEventListener('click', handleAnchorClick);
-        });
+        handleScroll();
 
         return () => {
+            // Limpiamos el event de listener al desmontar el componente
             window.removeEventListener("scroll", handleScroll);
-            links.forEach(link => {
-                link.removeEventListener('click', handleAnchorClick);
-            });
         };
-    }, []);
-    // Fin de la lógica del Scroll y Anchor Links
-
+    }, []); // El array vacío nos asegura que este efecto se ejecute solo una vez al montar
 
     return (
         <nav
@@ -110,18 +86,27 @@ export const NavBar = () => {
             <div className="container flex items-center justify-between">
                 <a className="text-xl font-bold text-primary flex justify-between" href="#hero">
                     <span className="relative z-10">
-                        <span className="text-glow text-foreground">Markus</span> Portfolio
+                        <span className="text-glow text-foreground">{t('portfolio_title_name')}</span> {t('portfolio_title_suffix')}
                     </span>
                 </a>
 
                 {/* Elementos para la versión de ESCRITORIO */}
                 <div className="hidden md:flex space-x-9 items-center">
-                    {navItems.map((item, key) => (
+                    {navItemKeys.map((item, key) => (
                         <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400">
-                            {item.name}
+                            {t(item.key)}
                         </a>
                     ))}
-                    {/* BOTÓN THEMETOGGLE PARA ESCRITORIO (a la derecha de los enlaces) */}
+                    {/* BOTÓN DE IDIOMA PARA ESCRITORIO */}
+                    <button
+                        onClick={toggleLanguage}
+                        className="ml-4 px-3 py-1 rounded-full bg-blue-500 text-white text-sm hover:bg-blue-600 transition-colors"
+                        aria-label="Toggle language"
+                    >
+                        {currentLang === 'es' ? 'English' : 'Spanish'}
+                    </button>
+
+                    {/* BOTÓN THEMETOGGLE PARA ESCRITORIO */}
                     <button
                         onClick={toggleTheme}
                         className={cn(
@@ -158,9 +143,18 @@ export const NavBar = () => {
                     </button>
                 </div>
 
-                {/* Elementos para la versión MÓVIL (ThemeToggle + botón de menú) */}
-                <div className="md:hidden flex items-center space-x-4"> {/* Añadido space-x-4 para separar el toggle y el botón de menú */}
-                    {/* BOTÓN THEMETOGGLE PARA MÓVIL: AQUI ES DONDE DEBE ESTAR (a la derecha del botón de menú) */}
+                {/* Elementos para la versión MÓVIL (ThemeToggle + botón de menú + Botón de Idioma) */}
+                <div className="md:hidden flex items-center space-x-4">
+                    {/* BOTÓN DE IDIOMA PARA MÓVIL */}
+                    <button
+                        onClick={toggleLanguage}
+                        className="px-3 py-1 rounded-full bg-blue-500 text-white text-sm hover:bg-blue-600 transition-colors"
+                        aria-label="Toggle language"
+                    >
+                        {currentLang === 'es' ? 'EN' : 'ES'} {/* Versión corta para móvil */}
+                    </button>
+
+                    {/* BOTÓN THEMETOGGLE PARA MÓVIL */}
                     <button
                         onClick={toggleTheme}
                         className={cn(
@@ -203,22 +197,21 @@ export const NavBar = () => {
                     </button>
                 </div>
 
-                {/* mobile nav overlay menu (este sí se oculta/muestra) */}
+                {/* mobile nav overlay menu */}
                 <div className={cn(
                     "fixed inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center",
                     "transition-all duration-200 md:hidden",
-                    "h-[100dvh] h-screen overflow-y-auto", // Se mantiene el scroll y la altura estable
+                    "h-[100dvh] h-screen overflow-y-auto",
                     isMenuOpen ? "opacity-100 pointer-events-auto"
-                        : "opacity-0 pointer-events-none"
+                               : "opacity-0 pointer-events-none"
                 )}>
                     <div className="flex flex-col space-y-9 text-xl py-20 w-full items-center">
-                        {navItems.map((item, key) => (
+                        {navItemKeys.map((item, key) => (
                             <a key={key} href={item.href} className="text-foreground/70 hover:text-primary transition-colors duration-400"
                                 onClick={() => setIsMenuOpen(false)}>
-                                {item.name}
+                                {t(item.key)}
                             </a>
                         ))}
-                        {/* El BOTÓN THEMETOGGLE NO VA AQUÍ DENTRO DEL OVERLAY, ya que está en la barra de navegación principal móvil */}
                     </div>
                 </div>
 

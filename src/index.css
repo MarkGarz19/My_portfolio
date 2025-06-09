@@ -107,7 +107,7 @@
 
   html {
     @apply scroll-smooth;
-    background: none !important; 
+    background: none !important;
   }
 
   body {
@@ -128,8 +128,8 @@
   }
 
   section[id] {
-    scroll-margin-top: 8rem !important;
-    min-height: calc(100vh - 8rem) !important;
+    scroll-margin-top: 7rem !important;
+    min-height: calc(100vh - 7rem) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
